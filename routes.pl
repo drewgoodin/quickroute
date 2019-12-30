@@ -9,14 +9,3 @@ route '/', get => sub {
   type('html'); 
   template('index')
 };
-
-route '/api', get => sub {
-  my %hsh = (hi => 'world');
-  status(201);
-  type('json');
-  require JSON;
-  my $json = JSON->new();
-  $json->encode(\%hsh)
-};
-
-
