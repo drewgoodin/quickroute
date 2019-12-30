@@ -6,7 +6,7 @@ route [path], [method] => sub {
 }
 ```
 
-[path] must be quoted, but [method] need not be if you stick with the 'fat comma' as above.
+[path] must be quoted, but [method] need not be if you stick with the 'fat comma' as above. Brackets shown just to separate parameters. See examples.
 
 The subroutine reference shown above must return a single scalar containing the response content. This is most easily accomplished with the template() function below. Call it last and you can avoid an explicit 'return'.
 
@@ -22,7 +22,7 @@ app.psgi runs in the main package and introduces a few globals, only one of whic
 
 - **$env** - The Plack Environment hash. This is available in your route subroutines, so you can do things like parse query strings, etc.
 
-***These are minupulated only by the exported functions of the Quickroute package; you shouldn't touch them directly***
+***These are manipulated only by the exported functions of the Quickroute package; you shouldn't touch them directly***
 
 - **%routes**  - A hash of hashes. The key is a url path. The value is a hash with HTTP method keys and subroutine reference values (the action that you take for a given route).
 - **$status**  - HTTP response status code
@@ -50,8 +50,6 @@ Content type defaults to text/html, but you can override this either through set
 
 ```perl
 route '/', get => sub {
-  status(200);
-  type(html);
   template(index);
 }
 
