@@ -14,7 +14,7 @@ Quickroute doesn't care what you claim is an HTTP method, so code thoughtfully.
 
 It does set the minimum header/status code combination required by PSGI, but you can change/add to this on a per-route basis.
 
-###Globals###
+### Globals
 
 app.psgi runs in the main package and introduces a few globals, only one of which you should (optionally) access directly.
 
@@ -26,7 +26,7 @@ app.psgi runs in the main package and introduces a few globals, only one of whic
 - **$status**  - HTTP response status code
 - **%headers** - HTTP response header list
 
-###Functions###
+### Functions
 
 ```
 route [path], [method] => sub {
@@ -47,11 +47,11 @@ template(mason component, arguments)
 ```
  
 
-###Content types###
+### Content types
 
 Content type defaults to text/html, but you can override this either through set_header(), or in a few cases through type(). Quickroute provides a small hash mapping single-word types to their mime-type. They are: plain, html, css, js, json, and xml. Using type with any of these as arguments is a quick way to set this header without using set_header.
 
-###Example###
+### Example 
 
 ```perl
 route '/', get => sub {
@@ -67,13 +67,13 @@ route '/api', get => sub {
 }
 ```
 
-###Templates###
+### Templates
 
 HTML::Mason is the templating engine for Quickroute. If you've never used it, check out this [eBook](https://masonbook.houseabsolute.com/book/) and ignore all the stuff about Apache/mod_perl. In our case, we are using it purely as a template processor via [HTML::Mason::Interp](https://metacpan.org/pod/HTML::Mason::Interp).
 
 Your template components must be kept in the includes ```templates``` directory for the ```template()``` function to process them.
 
-###Required modules###
+### Required modules
 
 Plack
 HTML::Mason
