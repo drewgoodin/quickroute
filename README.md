@@ -8,6 +8,8 @@ route [path], [method] => sub {
 
 [path] must be quoted, but [method] need not be if you stick with the 'fat comma' as above.
 
+The subroutine reference shown above must return a single scalar containing the response content. This is most easily accomplished with the template() function below. Call it last and you can avoid an explicit 'return'.
+
 You must include a special route via the function ```noroute``` (below), which defines what happens when you haven't defined a route for a given request (path + method combination). A default one is included already in ```routes.pl```.
 
 Quickroute doesn't care what you claim is an HTTP method, so code thoughtfully. 
@@ -26,7 +28,7 @@ app.psgi runs in the main package and introduces a few globals, only one of whic
 - **$status**  - HTTP response status code
 - **%headers** - HTTP response header list
 
-### Functions
+### Exported Functions
 
 ```
 route [path], [method] => sub {
