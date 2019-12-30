@@ -30,24 +30,17 @@ app.psgi runs in the main package and introduces a few globals, only one of whic
 
 ### Exported Functions
 
-```
-route [path], [method] => sub {
-  your code here
-}
+**route** path, method => sub {}
 
-noroute => sub {
-  your code here
-}
+**noroute** => sub {}
 
-status(http response code)
+**status**(http response code)
 
-set_header('header' => 'value')
+**set_header**('header' => 'value')
 
-type(content type keyword)
+**type**(content type keyword)
 
-template(mason component, arguments)
-```
- 
+**template**(mason component, arguments)
 
 ### Content types
 
