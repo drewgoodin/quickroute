@@ -6,9 +6,11 @@ route [path], [method] => sub {
 }
 ```
 
+Facilities to set codes/headers below.
+
 [path] must be quoted, but [method] need not be if you stick with the 'fat comma' as above. Brackets shown just to separate parameters. See examples.
 
-The subroutine reference shown above must return a single scalar containing the response content. This is most easily accomplished with the template() function below. Call it last and you can avoid an explicit 'return'.
+The subroutine reference shown above must return a single scalar containing the response content. This is most easily accomplished with the template() function. Call it last and you can avoid an explicit 'return'.
 
 You must include a special route via the function ```noroute``` (below), which defines what happens when you haven't defined a route for a given request (path + method combination). A default one is included already in ```routes.pl```.
 
