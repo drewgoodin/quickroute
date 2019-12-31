@@ -73,4 +73,12 @@ Your template components must be kept in the includes ```templates``` directory 
 - Plack
 - HTML::Mason
 
-Quickroute comes with a small startup script, ```run.sh```, which preloads HTML::Mason and sets the application to reload via Plack's [Shotgun](https://metacpan.org/pod/Plack::Loader::Shotgun).
+### Quickstart
+
+```
+git clone https://github.com/goodind1/quickroute
+cd quickroute
+plackup
+```
+
+Visit localhost:5000 (plackup should default to that port)
