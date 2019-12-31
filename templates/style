@@ -5,6 +5,7 @@ inherit => undef
 body {
   background-color: Black;
   color: LightGreen;
+  font-family: FreeSans;
 }
 
 a {
