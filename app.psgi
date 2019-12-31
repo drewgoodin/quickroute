@@ -1,3 +1,4 @@
+use lib 'lib';
 use Quickroute;
 do './routes.pl';
 
