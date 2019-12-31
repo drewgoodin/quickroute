@@ -1,14 +1,16 @@
 package Quickroute;
-use Exporter qw!import!;
 
+use Exporter qw!import!;
 our @EXPORT = qw!
-  route
   noroute
-  status
-  type
+  route
   set_header
+  status
   template
+  type
   !;
+
+my (%routes, $status, %headers); # these are set by user via exported functions.
 
 my $interp = HTML::Mason::Interp->new(comp_root => "$ENV{PWD}/templates");
 
@@ -21,25 +23,39 @@ my %mime = (
   xml  => 'text/xml',
 );
 
-sub route {
-  my ($path, $method, $sub) = @_;
-  $method = uc $method;
-  $main::routes{$path}->{$method} = $sub;
+sub new { 
+  my ($class, $env) = @_;
+  return bless { env => $env } => $class;
 }
 
-sub noroute { $main::routes{error} = shift }
+sub go {
+  my $self = shift;
+  my $path = $self->{env}->{PATH_INFO} // '/';
+  my $method = $self->{env}->{REQUEST_METHOD};
+  my $action = $routes{$path}->{$method} // $routes{error};
 
-sub status  { $main::status = shift }
+  $status = 200;                              # default, might change when route is run
+  %headers = ('Content-type' => 'text/html'); # likewise
 
-sub type { 
-  my $type = shift; 
-  @main::headers{'Content-type'} = $mime{$type};
+  my $content = $action->();                  # run the route
+  [ $status, [ %headers ], [ $content ] ]
+}
+
+### Exports ###
+
+sub noroute { $routes{error} = shift }
+
+sub route {
+  my ($path, $method, $action) = @_;
+  $routes{$path}->{uc $method} = $action;
 }
 
 sub set_header { 
   my %pair = @_;
-  $main::headers{$_} = $pair{$_} for keys %pair;
+  $headers{$_} = $pair{$_} for keys %pair;
 }
+
+sub status { $status = shift }
 
 sub template {
   my ($component, @args) = @_;
@@ -48,5 +64,7 @@ sub template {
   $interp->exec("/" . $component, @args);
   $buf;
 }
+
+sub type   { $headers{'Content-type'} = shift }
 
 1;
