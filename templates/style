@@ -1,0 +1,12 @@
+<%flags>
+inherit => undef
+</%flags>
+
+body {
+  background-color: Black;
+  color: LightGreen;
+}
+
+a {
+  color: Cyan;
+}

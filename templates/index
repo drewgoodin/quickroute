@@ -1,1 +1,4 @@
-<p>create some routes!</p>
+<h3>Welcome to Quickroute</h3>
+<p>A couple of routes have been provided for you in 'routes.pl', along with some corresponding templates.</p>
+<p>Take special note of the style template, in particular its 'inherit' flag. For more information on Mason templating, check out this <a href='https://masonbook.houseabsolute.com/book/'>eBook</a>.</p>
+<p>Quickroute on <a href='https://github.com/goodind1/quickroute'>GitHub</a></p>
