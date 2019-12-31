@@ -11,8 +11,7 @@ our @EXPORT = qw!
   type
   !;
 
-# set via exported functions
-my (%routes, $status, %headers);
+my %routes;
 
 my $interp = HTML::Mason::Interp->new(comp_root => "$ENV{PWD}/templates");
 
@@ -27,7 +26,11 @@ my %mime = (
 
 sub new { 
   my ($class, $env) = @_;
-  return bless { env => $env } => $class;
+  return bless { 
+    env => $env,
+    status => 200,
+    headers => { 'Content-type' => 'text/html' },
+  } => $class;
 }
 
 sub go {
@@ -35,12 +38,24 @@ sub go {
   my $path = $self->{env}->{PATH_INFO} // '/';
   my $method = $self->{env}->{REQUEST_METHOD};
   my $action = $routes{$path}->{$method} // $routes{error};
+  my $content = $action->($self);
+  [ $self->{status}, [ %{$self->{headers}} ], [ $content ] ]
+}
 
-  $status = 200;                              # default, might change when route is run
-  %headers = ('Content-type' => 'text/html'); # likewise
+sub set_header { 
+  my $self = shift;
+  my %pair = @_;
+  $self->{headers}->{$_} = $pair{$_} for keys %pair;
+}
 
-  my $content = $action->();                  # run the route
-  [ $status, [ %headers ], [ $content ] ]
+sub status { 
+  my ($self, $code) = @_;
+  $self->{status} = $code;
+}
+
+sub type   { 
+  my ($self, $type) = @_;
+  $self->{headers}->{'Content-type'} = $mime{$type};
 }
 
 ### Exports ###
@@ -52,13 +67,6 @@ sub route {
   $routes{$path}->{uc $method} = $action;
 }
 
-sub set_header { 
-  my %pair = @_;
-  $headers{$_} = $pair{$_} for keys %pair;
-}
-
-sub status { $status = shift }
-
 sub template {
   my ($component, @args) = @_;
   my $buf;
@@ -66,7 +74,5 @@ sub template {
   $interp->exec("/" . $component, @args);
   $buf;
 }
-
-sub type   { $headers{'Content-type'} = shift }
 
 1;

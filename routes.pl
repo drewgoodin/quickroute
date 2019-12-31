@@ -1,5 +1,6 @@
 noroute sub {
-  status(404);
+  my $self = shift;
+  $self->status(404);
   template('error')
 };
 
@@ -8,6 +9,7 @@ route '/', get => sub {
 };
 
 route '/style.css', get => sub {
-  type('css'); 
+  my $self = shift;
+  $self->type('css'); 
   template('style')
 };
