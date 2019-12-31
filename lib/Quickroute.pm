@@ -1,4 +1,5 @@
 package Quickroute;
+use HTML::Mason;
 
 use Exporter qw!import!;
 our @EXPORT = qw!
