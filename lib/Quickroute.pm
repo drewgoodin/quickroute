@@ -11,7 +11,8 @@ our @EXPORT = qw!
   type
   !;
 
-my (%routes, $status, %headers); # these are set by user via exported functions.
+# set via exported functions
+my (%routes, $status, %headers);
 
 my $interp = HTML::Mason::Interp->new(comp_root => "$ENV{PWD}/templates");
 
