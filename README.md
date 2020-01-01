@@ -91,4 +91,4 @@ noroute sub {
 
 HTML::Mason is the templating engine for Quickroute. If you've never used it, check out this [eBook](https://masonbook.houseabsolute.com/book/) and ignore all the stuff about Apache/mod_perl. In our case, we are using it purely as a template processor via [HTML::Mason::Interp](https://metacpan.org/pod/HTML::Mason::Interp).
 
-Your template components must be kept in the included ```templates``` directory for the ```template()``` function to process them.
+Your Mason components must be kept in the included ```templates``` directory for the ```template()``` function to process them.
