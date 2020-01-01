@@ -1,4 +1,4 @@
-**Quickroute** is a small PSGI web framework. Routes are populated in ```./routes.pl``` with the following syntax:
+**Quickroute** is a small PSGI web router/framework. Routes are populated in ```./routes.pl``` with the following syntax:
 
 ```perl
 route [path], [method] => sub {
@@ -32,9 +32,9 @@ plackup
 ```
 
 ### Global $r
-Within ```routes.pl```, you have access to the Quickroute object created in app.psgi (one object is created per request). You can use this to call a few methods in your routing subs, like $r->status(404), etc. More below.
+Within ```routes.pl```, you have access to the Quickroute object created in app.psgi (one object is created per request). You can use this to call a few methods in your routing subs:
 
-### Object methods (that you care about)
+#### Object methods (that you care about)
 
 ```perl
 $r->env()                        # Plack ennivornment hash reference
