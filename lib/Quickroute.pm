@@ -1,6 +1,7 @@
 package Quickroute;
-use HTML::Mason;
 
+use strict;
+use HTML::Mason;
 use Exporter qw!import!;
 our @EXPORT = qw!
   noroute
@@ -37,8 +38,10 @@ sub go {
   my $self = shift;
   my $path = $self->{env}->{PATH_INFO} // '/';
   my $method = $self->{env}->{REQUEST_METHOD};
+  $path =~ s/\/\z// unless $path eq '/';
   my $action = $routes{$path}->{$method} // $routes{error};
-  my $content = $action->($self);
+  delete $routes{$path} if $action == $routes{error};
+  my $content = $action->();
   [ $self->{status}, [ %{$self->{headers}} ], [ $content ] ]
 }
 
