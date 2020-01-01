@@ -2,4 +2,4 @@ use lib 'lib';
 use Quickroute;
 do './routes.pl';
 
-my $app = sub { (our $r = Quickroute->new(shift))->go() }
+my $app = sub { (our $q = Quickroute->new(shift))->go() }

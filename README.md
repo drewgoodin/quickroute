@@ -37,19 +37,19 @@ Quickroute doesn't care what you claim is an HTTP method, so code thoughtfully.
 
 It does set the minimum header/status code combination required by PSGI, but you can change/add to this on a per-route basis.
 
-### Global $r
+### Global $q
 Within ```routes.pl```, you have access to the Quickroute object created in app.psgi (one object is created per request). You can use this to call a few methods in your routing subs:
 
 #### Object methods (that you care about)
 
 ```perl
-$r->env()                        # Plack ennivornment hash reference
+$q->env()                        # Plack environment hash reference
 
-$r->set_header('key' => 'value') # Set any response header
+$q->set_header('key' => 'value') # Set any response header
 
-$r->status('some int')           # Set HTTP response code
+$q->status('some int')           # Set HTTP response code
 
-$r->type('some supported type')  # Quickie for setting content type response header
+$q->type('some supported type')  # Quickie for setting content type response header
 ```
 
 ### Exported Functions
@@ -64,7 +64,7 @@ template('mason component', @args)
 
 ### Content types
 
-Content type defaults to text/html, but you can override this either through ```$r->set_header()```, or in a few cases through ```$r->type()```. Quickroute provides a small hash that maps single-word types to their mime-type. They are: plain, html, css, js, json, and xml. Using ```$r->type``` with any of these as arguments is a quick way to set this header.
+Content type defaults to text/html, but you can override this either through ```$q->set_header()```, or in a few cases through ```$q->type()```. Quickroute provides a small hash that maps single-word types to their mime-type. They are: plain, html, css, js, json, and xml. Using ```$q->type``` with any of these as arguments is a quick way to set this header.
 
 ### Examples
 
@@ -74,14 +74,14 @@ route '/', get => sub {
 }
 
 route '/api', get => sub {
-  $r->status(201);
-  $r->type('json');
+  $q->status(201);
+  $q->type('json');
   template('my_json_file');
 }
 
 noroute sub {
-  $r->status(404);
-  $r->type('plain);
+  $q->status(404);
+  $q->type('plain);
   template('oops');
 }
 

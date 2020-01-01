@@ -1,5 +1,5 @@
 noroute sub {
-  $r->status(404);
+  $q->status(404);
   template('error')
 };
 
@@ -8,6 +8,6 @@ route '/', get => sub {
 };
 
 route '/style.css', get => sub {
-  $r->type('css'); 
+  $q->type('css'); 
   template('style')
 };
