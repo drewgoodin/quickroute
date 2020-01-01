@@ -1,4 +1,22 @@
-**Quickroute** is a small PSGI web router/framework. Routes are populated in ```./routes.pl``` with the following syntax:
+**Quickroute** is a small PSGI web router/framework.
+
+### Quickstart
+
+---
+
+```
+git clone https://github.com/goodind1/quickroute
+cd quickroute
+plackup
+
+Required Modules:
+
+- Plack
+- HTML::Mason
+
+---
+
+Routes are populated in ```./routes.pl``` with the following syntax:
 
 ```perl
 route [path], [method] => sub {
@@ -17,19 +35,6 @@ You must include a special route via the function ```noroute```, which defines w
 Quickroute doesn't care what you claim is an HTTP method, so code thoughtfully. 
 
 It does set the minimum header/status code combination required by PSGI, but you can change/add to this on a per-route basis.
-
-### Quickstart
-
-Required Modules:
-
-- Plack
-- HTML::Mason
-
-```
-git clone https://github.com/goodind1/quickroute
-cd quickroute
-plackup
-```
 
 ### Global $r
 Within ```routes.pl```, you have access to the Quickroute object created in app.psgi (one object is created per request). You can use this to call a few methods in your routing subs:
