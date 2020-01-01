@@ -58,7 +58,7 @@ template('mason component', @args)
 
 ### Content types
 
-Content type defaults to text/html, but you can override this either through ```$r->set_header()```, or in a few cases through ```$r->type()```. Quickroute provides a small hash that maps single-word types to their mime-type. They are: plain, html, css, js, json, and xml. Using ```$r->type``` with any of these as arguments is a quick way to set this header without using ```$r->set_header()```.
+Content type defaults to text/html, but you can override this either through ```$r->set_header()```, or in a few cases through ```$r->type()```. Quickroute provides a small hash that maps single-word types to their mime-type. They are: plain, html, css, js, json, and xml. Using ```$r->type``` with any of these as arguments is a quick way to set this header.
 
 ### Examples
 
