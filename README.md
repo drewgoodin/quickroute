@@ -1,4 +1,4 @@
-**Quickroute** is a small PSGI web framework. Routes are populated in ```routes.pl``` with the following syntax:
+**Quickroute** is a small PSGI web framework. Routes are populated in ```./routes.pl``` with the following syntax:
 
 ```perl
 route [path], [method] => sub {
@@ -6,74 +6,24 @@ route [path], [method] => sub {
 }
 ```
 
-Facilities to set codes/headers below.
-
 [path] must be quoted, but [method] need not be if you stick with the 'fat comma' as above. Brackets shown just to separate parameters. See examples.
 
-The subroutine reference shown above must return a single scalar containing the response content. This is most easily accomplished with the template() function. Call it last and you can avoid an explicit 'return'.
+Don't use trailing slashes in defining routes ('/' being the exception); they get sawn off.
 
-You must include a special route via the function ```noroute``` (below), which defines what happens when you haven't defined a route for a given request (path + method combination). A default one is included already in ```routes.pl```.
+The subroutine reference shown above must return a single scalar containing the response content. This is most easily accomplished with the template() function (see exports). Call it last and you can avoid an explicit 'return'.
+
+You must include a special route via the function ```noroute```, which defines what happens when you haven't defined a route for a given request (path + method combination). A default one is included already.
 
 Quickroute doesn't care what you claim is an HTTP method, so code thoughtfully. 
 
 It does set the minimum header/status code combination required by PSGI, but you can change/add to this on a per-route basis.
 
-### Globals
+### Quickstart
 
-app.psgi runs in the main package and introduces a few globals, only one of which you should (optionally) access directly.
-
-- **$env** - The Plack Environment hash. This is available in your route subroutines, so you can do things like parse query strings, etc.
-
-***These are manipulated only by the exported functions of the Quickroute package; you shouldn't touch them directly***
-
-- **%routes**  - A hash of hashes. The key is a url path. The value is a hash with HTTP method keys and subroutine reference values (the action that you take for a given route).
-- **$status**  - HTTP response status code
-- **%headers** - HTTP response header list
-
-### Exported Functions
-
-**route** path, method => sub {}
-
-**noroute** => sub {}
-
-**status**(http response code)
-
-**set_header**('header' => 'value')
-
-**type**(content type keyword)
-
-**template**(mason component, arguments)
-
-### Content types
-
-Content type defaults to text/html, but you can override this either through set_header(), or in a few cases through type(). Quickroute provides a small hash mapping single-word types to their mime-type. They are: plain, html, css, js, json, and xml. Using type with any of these as arguments is a quick way to set this header without using set_header.
-
-### Example 
-
-```perl
-route '/', get => sub {
-  template(index);
-}
-
-route '/api', get => sub {
-  status(201);
-  type(json);
-  template(my_json_file);
-}
-```
-
-### Templates
-
-HTML::Mason is the templating engine for Quickroute. If you've never used it, check out this [eBook](https://masonbook.houseabsolute.com/book/) and ignore all the stuff about Apache/mod_perl. In our case, we are using it purely as a template processor via [HTML::Mason::Interp](https://metacpan.org/pod/HTML::Mason::Interp).
-
-Your template components must be kept in the includes ```templates``` directory for the ```template()``` function to process them.
-
-### Required modules
+Required Modules:
 
 - Plack
 - HTML::Mason
-
-### Quickstart
 
 ```
 git clone https://github.com/goodind1/quickroute
@@ -81,4 +31,58 @@ cd quickroute
 plackup
 ```
 
-Visit localhost:5000 (plackup should default to that port)
+### Global $r
+Within ```routes.pl```, you have access to the Quickroute object created in app.psgi (one object is created per request). You can use this to call a few methods in your routing subs, like $r->status(404), etc. More below.
+
+### Object methods (that you care about)
+
+```perl
+$r->env()                        # Plack ennivornment hash reference
+
+$r->set_header('key' => 'value') # Set any response header
+
+$r->status('some int')           # Set HTTP response code
+
+$r->type('some supported type')  # Quickie for setting content type response header
+```
+
+### Exported Functions
+
+```perl
+route('path', 'method', sub {})
+
+noroute(sub {})
+
+template('mason component', @args)
+```
+
+### Content types
+
+Content type defaults to text/html, but you can override this either through ```$r->set_header()```, or in a few cases through ```$r->type()```. Quickroute provides a small hash that maps single-word types to their mime-type. They are: plain, html, css, js, json, and xml. Using ```$r->type``` with any of these as arguments is a quick way to set this header without using ```$r->set_header()```.
+
+### Examples
+
+```perl
+route '/', get => sub {
+  template('index');
+}
+
+route '/api', get => sub {
+  $r->status(201);
+  $r->type('json');
+  template('my_json_file');
+}
+
+noroute sub {
+  $r->status(404);
+  $r->type('plain);
+  template('oops');
+}
+
+```
+
+### Templates
+
+HTML::Mason is the templating engine for Quickroute. If you've never used it, check out this [eBook](https://masonbook.houseabsolute.com/book/) and ignore all the stuff about Apache/mod_perl. In our case, we are using it purely as a template processor via [HTML::Mason::Interp](https://metacpan.org/pod/HTML::Mason::Interp).
+
+Your template components must be kept in the included ```templates``` directory for the ```template()``` function to process them.
