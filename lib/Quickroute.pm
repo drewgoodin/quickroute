@@ -3,14 +3,7 @@ package Quickroute;
 use strict;
 use HTML::Mason;
 use Exporter qw!import!;
-our @EXPORT = qw!
-  noroute
-  route
-  set_header
-  status
-  template
-  type
-  !;
+our @EXPORT = qw!noroute route template!;
 
 my %routes;
 
@@ -29,10 +22,14 @@ sub new {
   my ($class, $env) = @_;
   return bless { 
     env => $env,
+    ### defaults, you can change these in routes
     status => 200,
     headers => { 'Content-type' => 'text/html' },
+    ###
   } => $class;
 }
+
+sub env { shift->{env} }
 
 sub go {
   my $self = shift;
@@ -42,7 +39,7 @@ sub go {
   my $action = $routes{$path}->{$method} // $routes{error};
   delete $routes{$path} if $action == $routes{error};
   my $content = $action->();
-  [ $self->{status}, [ %{$self->{headers}} ], [ $content ] ]
+  return [ $self->{status}, [ %{$self->{headers}} ], [ $content ] ] # psgi response
 }
 
 sub set_header { 
