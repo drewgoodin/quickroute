@@ -5,7 +5,7 @@ use HTML::Mason;
 use Exporter qw!import!;
 our @EXPORT = qw!noroute route template!;
 
-my %routes;
+our %routes;
 
 my $interp = HTML::Mason::Interp->new(comp_root => "$ENV{PWD}/templates");
 
@@ -19,9 +19,10 @@ my %mime = (
 );
 
 sub new { 
-  my ($class, $env) = @_;
+  my ($class, $env, %routes) = @_;
   return bless { 
     env => $env,
+    routes => \%routes,
     ### defaults, you can change these in routes
     status => 200,
     headers => { 'Content-type' => 'text/html' },
@@ -30,14 +31,16 @@ sub new {
 }
 
 sub env { shift->{env} }
+sub routes { shift->{routes} }
 
 sub go {
   my $self = shift;
+  my $routes = $self->routes;
   my $path = $self->{env}->{PATH_INFO} // '/';
   my $method = $self->{env}->{REQUEST_METHOD};
   $path =~ s/\/\z// unless $path eq '/';
-  my $action = $routes{$path}->{$method} // $routes{error};
-  delete $routes{$path} if $action == $routes{error};
+  my $action = $routes->{$path}->{$method} // $routes->{error};
+  delete $routes->{$path}->{method} if $action == $routes->{error};
   my $content = $action->();
   return [ $self->{status}, [ %{$self->{headers}} ], [ $content ] ] # psgi response
 }
