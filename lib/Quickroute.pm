@@ -19,10 +19,11 @@ my %mime = (
 );
 
 sub new { 
-  my ($class, $env, %routes) = @_;
+  my ($class, $env) = @_;
+  my %routes_copy = %routes;
   return bless { 
     env => $env,
-    routes => \%routes,
+    routes => \%routes_copy,
     ### defaults, you can change these in routes
     status => 200,
     headers => { 'Content-type' => 'text/html' },
