@@ -5,7 +5,7 @@ use HTML::Mason;
 use Exporter qw!import!;
 our @EXPORT = qw!noroute route template!;
 
-our %routes;
+my %routes;
 
 my $interp = HTML::Mason::Interp->new(comp_root => "$ENV{PWD}/templates");
 
