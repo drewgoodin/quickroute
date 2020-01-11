@@ -1,5 +1,7 @@
 package Quickroute;
 
+use Quickroute::Auth;
+
 use strict;
 use HTML::Mason;
 use Exporter qw!import!;
@@ -37,11 +39,12 @@ sub routes { shift->{routes} }
 sub go {
   my $self = shift;
   my $routes = $self->routes;
-  my $path = $self->{env}->{PATH_INFO} // '/';
-  my $method = $self->{env}->{REQUEST_METHOD};
+  my $path = $self->env->{PATH_INFO};
+  my $path = $path ? $path : '/';
+  my $method = $self->env->{REQUEST_METHOD};
   $path =~ s/\/\z// unless $path eq '/';
   my $action = $routes->{$path}->{$method} // $routes->{error};
-  delete $routes->{$path}->{method} if $action == $routes->{error};
+  delete $routes->{$path}->{$method} if $action == $routes->{error};
   my $content = $action->();
   return [ $self->{status}, [ %{$self->{headers}} ], [ $content ] ] # psgi response
 }

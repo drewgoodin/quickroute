@@ -1,0 +1,3 @@
+<p>Welcome!</p>
+<p>Here is a page for authorized users only, as defined in './routes/auth.pl': <a href='/auth'>/auth<a></p>
+<p><a href='/logout'>Log out</a></p>
