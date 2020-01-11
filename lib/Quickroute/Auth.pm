@@ -36,7 +36,7 @@ sub authen {
   my $username = $body->{username};
 
   my $dbh = Quickroute::DB->new($q);
-  my $sth = $dbh->conn->prepare('select salt, privilege from users where username = ?');
+  my $sth = $dbh->conn->prepare('select salt from users where username = ?');
   $sth->execute($username);
   my @passarr = $sth->fetchrow_array();
 
@@ -56,7 +56,6 @@ sub authen {
 
   if ( $authdb->authenticate( $username, $password ) ) {
     $q->env->{'psgix.session'}->{auth} = 1;
-    $q->env->{'psgix.session'}->{priv} = shift @passarr;
     $q->env->{'psgix.session'}->{user} = $username;
     $q->env->{'psgix.session'}->{created} = DateTime->now()->epoch();
     $q->env->{'psgix.session'}->{persist} = 1 if $body->{remember};
