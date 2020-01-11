@@ -33,6 +33,10 @@ sub new {
   } => $class;
 }
 
+sub is_auth { Quickroute::Auth::is_auth(shift) }
+sub authen  { Quickroute::Auth::authen(shift)  }
+sub logout  { Quickroute::Auth::logout(shift)  }
+
 sub env { shift->{env} }
 sub routes { shift->{routes} }
 
