@@ -3,7 +3,7 @@
 <p>Check out ./templates, ./routes/public.pl, and ./routes/auth.pl to see what's going on.</p>
 <form method='POST'>
   <p>username: <input type = 'text' name = 'username' /></p>
-  <p>password: <input type = 'text' name = 'password' /></p>
+  <p>password: <input type = 'password' name = 'password' /></p>
   <p>remember me? <input type = 'checkbox' name = 'remember' unchecked /></p>
   <button type='submit'>Log In</button>
 </form>
