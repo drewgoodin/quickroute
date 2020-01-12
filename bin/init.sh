@@ -3,7 +3,7 @@
 # install Perl dependencies
 cpanm \
   Authen::Simple::DBI \
-  Crypt::Eksblowfish::Bcrypt \ 
+  Crypt::Eksblowfish::Bcrypt \
   Data::Entropy::Algorithms \
   DBD::CSV \
   DBI \
@@ -11,8 +11,8 @@ cpanm \
   HTML::Mason \
   Plack \
   Plack::App::File \
-  Plack::Builder
-  Plack::Middleware::Session \ 
+  Plack::Builder \
+  Plack::Middleware::Session
   
 CSV_DB=$(awk -F '=' '$1~/^csv_db$/ {print $2}'<config)
 
@@ -24,15 +24,12 @@ perl -e "
   use Crypt::Eksblowfish::Bcrypt qw!bcrypt_hash!;
   use DBI;
 
-  my \$username = 'admin';
-  my \$password = 'quickroute';
-  my \$hash = bcrypt_hash({
-      key_nul => 1,
-      cost => 6,
-      salt => \$salt,
-    }, \$password);
+  mkdir '$CSV_DB' unless -e '$CSV_DB';
 
-  my \$dbh = DBI->connect('dbi:CSV:f_dir=$CSV_DB');
-  my \$sth = \$dbh->prepare('insert into users values (?,?)');
-  \$sth->execute(\$username, \$hash) or die 'could not write to DB';
+  open my \$fh, '>', '$CSV_DB/users';
+  print \$fh 'username,password,salt' . qq?\n?;
+  close \$fh;
+
+  print qq?\nDatabase file initialized. Run 'bin/create_user'!\n?;
+
 "

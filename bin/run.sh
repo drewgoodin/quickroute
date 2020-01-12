@@ -19,32 +19,32 @@ use Quickroute;
 my \$public = sub { 
   do './routes/public.pl';
   my \$env = shift;
-  \$env->{'csv.db'}=$CSV_DB;
+  \$env->{'csv.db'}='$CSV_DB';
   (our \$q = Quickroute->new(\$env))->go()
 };
 
 my \$auth = sub { 
   do './routes/auth.pl';
   my \$env = shift;
-  \$env->{'csv.db'}=$CSV_DB;
+  \$env->{'csv.db'}='$CSV_DB';
   (our \$q = Quickroute->new(\$env))->go()
 };
 
-my \$pub = Plack::App::File->new(root => $APP_ROOT . '/pub')->to_app; #config
+my \$pub = Plack::App::File->new(root => '$APP_ROOT' . '/pub')->to_app; #config
 
 builder {
   mount '/' => builder {
     enable 'Session',
-      store => Quickroute::Session::cache($CACHE_ROOT, $SESSION_TTL),
-      state => Quickroute::Session::cookie($SECURE_COOKIE, $SESSION_TTL);
+      store => Quickroute::Session::cache('$CACHE_ROOT', $SESSION_TTL),
+      state => Quickroute::Session::cookie('$SECURE_COOKIE', $SESSION_TTL);
     \$public;
   };
-  mount $SECURE_PATH =>  builder {
+  mount '$SECURE_PATH' =>  builder {
     enable sub {
       my \$app = shift;
       sub {
         my \$env = shift;
-        my \$auth = Quickroute::Auth::auth_session(\$env, $CACHE_ROOT);
+        my \$auth = Quickroute::Auth::auth_session(\$env, '$CACHE_ROOT');
         return [ 403, ['Content-type' => 'text/plain'], [ 'forbidden' ] ] unless \$auth;
         my \$res = \$app->(\$env);
         return \$res;
