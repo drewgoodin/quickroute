@@ -12,6 +12,8 @@ perl -e "
   die 'must set SQLite file path in config' unless \$sqlite_file;
 
   my \$dbh = DBI->connect('dbi:SQLite:dbname=$SQLITE_FILE',undef,undef);
+  my \$sth = \$dbh->prepare('create table if not exists users(username text primary key, password blob not null, salt blob not null)');
+  \$sth->execute;
   my \$match;
   my \$unique;
   my \$password;
@@ -20,7 +22,7 @@ perl -e "
   my \$username = <>;
   chomp \$username;
 
-  my \$sth = \$dbh->prepare('select username from users where username = ?');
+  \$sth = \$dbh->prepare('select username from users where username = ?');
   \$sth->execute(\$username);
 
   \$unique = 1 unless \$sth->fetchrow_array();
