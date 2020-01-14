@@ -24,7 +24,7 @@ Edit 'config' and add values to the three fields that don't have defaults: app_r
 
 If using builtin authentication, run ```bin/create_user.sh```, which will create your SQLite database (if it doesn't exist) and a single 'users' table (likewise) containing only username and password data, as well as prompt you to create a user. You are free to create any other tables afterward.
 
-Run ```bin/run.sh''' navigate to localhost:5000. You will get a test page with login.
+Run ```bin/run.sh``` and navigate to localhost:5000. You will get a test page with login.
 
 ---
 
