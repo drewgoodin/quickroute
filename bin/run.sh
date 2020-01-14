@@ -20,10 +20,10 @@ my \$sqlite_file = '$SQLITE_FILE';
 die 'must set SQLite file path in config' unless \$sqlite_file;
 
 my \$app_root = '$APP_ROOT';
-die 'must set application root dir in config' unless \$sqlite_file;
+die 'must set application root dir in config' unless \$app_root;
 
 my \$cache_root = '$CACHE_ROOT';
-die 'must set cache root dir in config' unless \$sqlite_file;
+die 'must set cache root dir in config' unless \$cache_root;
 
 my \$public = sub { 
   do './routes/public.pl';

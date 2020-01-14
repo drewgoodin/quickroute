@@ -3,7 +3,7 @@
 SQLITE_FILE=$(awk -F '=' '$1~/^sqlite_file$/ {print $2}'<config)
 
 perl -e "
-  
+
   use lib 'lib';
   use Quickroute::Auth;
   use DBI;
