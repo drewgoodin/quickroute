@@ -11,7 +11,9 @@ use URL::Encode qw!url_params_mixed!;
 
 sub is_auth {
   my $q = shift;
-  $q->env->{'psgix.session'}->{auth} ? 0 : 1
+  my $auth = $q->env->{'psgix.session'}->{auth};
+  return 1 if $auth;
+  return 0;
 }
 
 sub hash_password {
