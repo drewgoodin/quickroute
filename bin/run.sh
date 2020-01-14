@@ -46,6 +46,15 @@ builder {
     enable 'Session',
       store => Quickroute::Session::cache('$CACHE_ROOT', $SESSION_TTL),
       state => Quickroute::Session::cookie('$SECURE_COOKIE', $SESSION_TTL);
+    enable sub {
+      my \$app = shift;
+      sub {
+        my \$env = shift;
+        Quickroute::Session::expire_cookie(\$env, '$CACHE_ROOT'); #expire cookie if persist field not set in session data
+        my \$res = \$app->(\$env);
+        return \$res;
+      };
+    };
     \$public;
   };
   mount '$SECURE_PATH' =>  builder {
@@ -53,7 +62,7 @@ builder {
       my \$app = shift;
       sub {
         my \$env = shift;
-        my \$auth = Quickroute::Auth::auth_session(\$env, '$CACHE_ROOT');
+        my \$auth = Quickroute::Auth::auth_session(\$env, '$CACHE_ROOT'); #check session data for auth field
         return [ 403, ['Content-type' => 'text/plain'], [ 'forbidden' ] ] unless \$auth;
         my \$res = \$app->(\$env);
         return \$res;

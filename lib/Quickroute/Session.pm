@@ -29,4 +29,15 @@ sub cookie {
   );
 }
 
+sub expire_cookie {
+  my ($env, $root) = @_;
+  my $id = $env->{HTTP_COOKIE};
+  return 0 unless $id;
+  $id =~ s/plack_session=(.*)/$1/;
+  my $session = Quickroute::Session::cache($root);
+  my $data = $session->cache->get($id);
+  my $persist = $data->{persist};
+  $env->{'psgix.session.options'}->{expires} = undef unless $persist;
+}
+
 1;

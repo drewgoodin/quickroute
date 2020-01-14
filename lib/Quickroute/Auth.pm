@@ -1,5 +1,6 @@
 package Quickroute::Auth;
 
+use Data::Dumper;
 use Authen::Simple::DBI;
 use Crypt::Eksblowfish::Bcrypt qw!bcrypt_hash!;
 use Data::Entropy::Algorithms qw!rand_bits!;
@@ -21,12 +22,7 @@ sub timestamp {
 
 sub is_auth {
   my $q = shift;
-  my $auth_status = $q->env->{'psgix.session'}->{auth};
-  if ($auth_status) {
-    expire($q) unless $q->env->{'psgix.session'}->{persist};
-    timestamp($q);
-    return 1;
-  }
+  return 1 if $q->env->{'psgix.session'}->{auth};
   return 0;
 }
 
@@ -84,8 +80,6 @@ sub auth_session {
   my $auth = $data->{auth};
   return 0 unless $auth;
 }
-
-1;
 
 sub logout {
   my $q = shift;
