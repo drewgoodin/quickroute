@@ -1,6 +1,6 @@
 <h4>Welcome to Quickroute!</h4>
-<p>This is a bare-bones application to demonstrate the routing mechanism. A user was set up for you upon install (username: admnin, password: quickroute).<p>
-<p>Check out ./templates, ./routes/public.pl, and ./routes/auth.pl to see what's going on.</p>
+<p>This is a bare-bones application to demonstrate the routing mechanism. Create a user with bin/create_user.pl to test the form below.</p>
+<p>Check out /templates, /routes/public.pl, and /routes/auth.pl to see how this sample site is set up.</p>
 <form method='POST'>
   <p>username: <input type = 'text' name = 'username' /></p>
   <p>password: <input type = 'password' name = 'password' /></p>
