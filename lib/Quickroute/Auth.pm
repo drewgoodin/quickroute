@@ -2,6 +2,7 @@ package Quickroute::Auth;
 
 use Authen::Simple::DBI;
 use Crypt::Eksblowfish::Bcrypt qw!bcrypt_hash!;
+use Data::Entropy::Algorithms qw!rand_bits!;
 use DateTime;
 use Plack::Request;
 use Quickroute::DB;
@@ -29,32 +30,39 @@ sub is_auth {
   return 0;
 }
 
+sub hash_password {
+  my ($plain_password, $salt) = @_;
+  $salt = rand_bits(16*8) unless $salt;
+  my $settings = { 
+    key_nul => 1,
+    cost   => 6,
+    salt   => $salt,
+  };
+  my $hashed_password = bcrypt_hash($settings, $plain_password);
+  return ($salt, $hashed_password);
+}
+
 sub authen { 
   my $q = shift;
   my $content = Plack::Request->new($q->env)->content;
   my $body = url_params_mixed($content);
   my $username = $body->{username};
-
   my $dbh = Quickroute::DB->new($q);
   my $sth = $dbh->conn->prepare('select salt from users where username = ?');
   $sth->execute($username);
   my @passarr = $sth->fetchrow_array();
 
   my $salt = (shift @passarr) // return 0;
-  my $settings = { 
-    key_nul => 1,
-    cost   => 6,
-    salt   => $salt,
-  };
-  my $password = bcrypt_hash($settings, $body->{password});
 
-  my $csv_db = $q->env->{'csv.db'};
+  my $hashed_password = hash_password($body->{password}, $salt);
+
+  my $sqlite_file = $q->env->{'sqlite.file'};
   my $authdb = Authen::Simple::DBI->new(
-    dsn       => "dbi:CSV:f_dir=$csv_db",
+    dsn       => "dbi:SQLite:dbname=$sqlite_file",
     statement => 'select password from users where username = ?'
   );
 
-  if ( $authdb->authenticate( $username, $password ) ) {
+  if ( $authdb->authenticate( $username, $hashed_password ) ) {
     $q->env->{'psgix.session'}->{auth} = 1;
     $q->env->{'psgix.session'}->{user} = $username;
     $q->env->{'psgix.session'}->{created} = DateTime->now()->epoch();

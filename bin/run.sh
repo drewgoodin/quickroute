@@ -4,7 +4,7 @@ PSGI_SERVER=$(awk -F '=' '$1~/^psgi_server$/ {print $2}'<config)
 SECURE_COOKIE=$(awk -F '=' '$1~/^secure_cookie$/ {print $2}'<config)
 SESSION_TTL=$(awk -F '=' '$1~/^session_ttl$/ {print $2}'<config)
 APP_ROOT=$(awk -F '=' '$1~/^app_root$/ {print $2}'<config)
-CSV_DB=$(awk -F '=' '$1~/^csv_db$/ {print $2}'<config)
+SQLITE_FILE=$(awk -F '=' '$1~/^sqlite_file$/ {print $2}'<config)
 CACHE_ROOT=$(awk -F '=' '$1~/^cache_root$/ {print $2}'<config)
 SECURE_PATH=$(awk -F '=' '$1~/^secure_path$/ {print $2}'<config)
 
@@ -16,17 +16,26 @@ plackup -s $PSGI_SERVER \
 use lib 'lib';
 use Quickroute;
 
+my \$sqlite_file = '$SQLITE_FILE';
+die 'must set SQLite file path in config' unless \$sqlite_file;
+
+my \$app_root = '$APP_ROOT';
+die 'must set application root dir in config' unless \$sqlite_file;
+
+my \$cache_root = '$CACHE_ROOT';
+die 'must set cache root dir in config' unless \$sqlite_file;
+
 my \$public = sub { 
   do './routes/public.pl';
   my \$env = shift;
-  \$env->{'csv.db'}='$CSV_DB';
+  \$env->{'sqlite.file'}='$SQLITE_FILE';
   (our \$q = Quickroute->new(\$env))->go()
 };
 
 my \$auth = sub { 
   do './routes/auth.pl';
   my \$env = shift;
-  \$env->{'csv.db'}='$CSV_DB';
+  \$env->{'sqlite.file'}='$SQLITE_FILE';
   (our \$q = Quickroute->new(\$env))->go()
 };
 

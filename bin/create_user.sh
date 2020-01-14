@@ -1,14 +1,17 @@
 #!/bin/sh
 
-CSV_DB=$(awk -F '=' '$1~/^csv_db$/ {print $2}'<config)
+SQLITE_FILE=$(awk -F '=' '$1~/^sqlite_file$/ {print $2}'<config)
 
 perl -e "
-
-  use Data::Entropy::Algorithms qw!rand_bits!;
-  use Crypt::Eksblowfish::Bcrypt qw!bcrypt_hash!;
+  
+  use lib 'lib';
+  use Quickroute::Auth;
   use DBI;
 
-  my \$dbh = DBI->connect('dbi:CSV:f_dir=$CSV_DB');
+  my \$sqlite_file = '$SQLITE_FILE';
+  die 'must set SQLite file path in config' unless \$sqlite_file;
+
+  my \$dbh = DBI->connect('dbi:SQLite:dbname=$SQLITE_FILE',undef,undef);
   my \$match;
   my \$unique;
   my \$password;
@@ -58,12 +61,7 @@ perl -e "
   \$password = \$pass1;
   chomp \$password;
 
-  my \$salt = rand_bits(16*8);
-  my \$hash = bcrypt_hash({
-      key_nul => 1,
-      cost => 6,
-      salt => \$salt,
-    }, \$password);
+  my (\$salt, \$hash) = Quickroute::Auth::hash_password(\$password);
 
   \$sth = \$dbh->prepare('insert into users values(?,?,?)');
   \$sth->execute(\$username, \$hash, \$salt) or die 'could not write to DB';

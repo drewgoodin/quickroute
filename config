@@ -5,10 +5,10 @@ secure_cookie=0
 # Cookie (client) and session (server) expire time, in seconds. Each will update when a page is refreshed. Math OK. Default is one month.
 session_ttl=60*60*24*30
 # Fully qualified path to app directory
-app_root=/home/k/quickroute
-# Fully qualified path of CSV 'database' directory. It will be created if it doesn't exist.
-csv_db=/home/k/csv
-# Fully qualified path to directory for session cache. It will be created if it doesn't exist.
-cache_root=/home/k/cache
+app_root=
+# Fully qualified path of SQLite database file.
+sqlite_file=
+# Fully qualified path to directory for session cache.
+cache_root=
 # this (virtual) directory contains routes from 'routes/auth.pl' and requires a user to be logged in to access any resource. (along with any 'directory' you create under it in auth.pl)
 secure_path=/auth
