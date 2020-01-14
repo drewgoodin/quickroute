@@ -4,26 +4,14 @@ use Data::Dumper;
 use Authen::Simple::DBI;
 use Crypt::Eksblowfish::Bcrypt qw!bcrypt_hash!;
 use Data::Entropy::Algorithms qw!rand_bits!;
-use DateTime;
 use Plack::Request;
 use Quickroute::DB;
 use Quickroute::Session;
 use URL::Encode qw!url_params_mixed!;
 
-sub expire {
-  my $q = shift;
-  $q->env->{'psgix.session.options'}->{expires} = undef; #strip expire time from sent cookie
-}
-
-sub timestamp {
-  my $q = shift;
-  $q->env->{'psgix.session'}->{last_access} = DateTime->now()->epoch();
-}
-
 sub is_auth {
   my $q = shift;
-  return 1 if $q->env->{'psgix.session'}->{auth};
-  return 0;
+  $q->env->{'psgix.session'}->{auth} ? 0 : 1
 }
 
 sub hash_password {
@@ -61,7 +49,6 @@ sub authen {
   if ( $authdb->authenticate( $username, $hashed_password ) ) {
     $q->env->{'psgix.session'}->{auth} = 1;
     $q->env->{'psgix.session'}->{user} = $username;
-    $q->env->{'psgix.session'}->{created} = DateTime->now()->epoch();
     $q->env->{'psgix.session'}->{persist} = 1 if $body->{remember};
     $q->env->{'psgix.session.options'}->{change_id} = 1;
     return 1;
