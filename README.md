@@ -28,7 +28,7 @@ Run ```bin/run.sh``` and navigate to localhost:5000. You will get a test page wi
 
 ---
 
-Routes are populated in ```./routes.pl``` with the following syntax:
+Routes are populated in either ```routes/public.pl``` or ```routes/auth.pl``` with the following syntax:
 
 ```perl
 route [path], [method] => sub {
