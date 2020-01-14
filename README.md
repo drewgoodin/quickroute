@@ -108,7 +108,7 @@ Every request, other than requests to resources under your secure_dir set in the
 
 Requests to resources under your secure_dir are not responded to with a Set-Cookie header. Rather, incoming requests are checked for a cookie that would have been set at the authentication stage above, and the session ID from this cookie is used to look up session data in the cache. The data is checked for the 'auth' field.
 
-You can still restrict access to resources in your public routes file, but you will need to check session data for auth status on a per-route basis, via $q->is_auth(). By populating routes in ```auth.pl```, this check is done for your automatically for any resources under secure_dir.
+You can still restrict access to resources in your public routes file, but you will need to check session data for auth status on a per-route basis, via ```$q->is_auth()```. By populating routes in routes/auth.pl, this check is done for your automatically for any resources under secure_dir.
 
 ### Templates
 
