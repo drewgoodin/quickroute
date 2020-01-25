@@ -5,7 +5,7 @@ use Quickroute::Auth;
 use strict;
 use HTML::Mason;
 use Exporter qw!import!;
-our @EXPORT = qw!noroute route template!;
+our @EXPORT = qw!route noroute template!;
 
 my %routes;
 
@@ -77,6 +77,7 @@ sub route {
   my ($path, $method, $action) = @_;
   $routes{$path}->{uc $method} = $action;
 }
+
 
 sub template {
   my ($component, @args) = @_;

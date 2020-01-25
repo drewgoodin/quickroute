@@ -59,17 +59,6 @@ sub authen {
   return 0;
 }
 
-sub auth_session {
-  my ($env, $root) = @_;
-  my $id = $env->{HTTP_COOKIE};
-  return 0 unless $id;
-  $id =~ s/plack_session=(.*)/$1/;
-  my $session = Quickroute::Session::cache($root);
-  my $data = $session->cache->get($id);
-  my $auth = $data->{auth};
-  return 0 unless $auth;
-}
-
 sub logout {
   my $q = shift;
   $q->env->{'psgix.session.options'}->{expire} = 1;
