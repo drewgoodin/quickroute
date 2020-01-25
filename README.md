@@ -28,7 +28,7 @@ Run ```bin/run.sh``` and navigate to localhost:5000. You will get a test page wi
 
 ---
 
-Routes are populated in either ```routes/public.pl``` or ```routes/auth.pl``` with the following syntax:
+Routes are populated in ```/routes.pl``` with the following syntax:
 
 ```perl
 route [path], [method] => sub {
@@ -104,11 +104,8 @@ noroute sub {
 
 ### Sessions
 
-Every request, other than requests to resources under your secure_dir set in the config file, receives a 'Set-Cookie' header as part of the response, so the presence of a valid cookie is not enough to define a user as authenticated. The cookie only contains the session ID and any parameters such as 'secure' and the cookie expiration date. When a user authenticates, session data is set on the server and stored in the environment hash for the request. One of the session data fields is 'auth' and is set to a true value when a user authenticates. This session data persists in the cache and is expired according to you session_ttl in config. session_ttl also defines when the cookie expireson the client side, so these two expirations are in sync. If the session data field 'persist' is set to a true value upon authentication, the cookie will be sent without an expiration date and will therefore expire on the client side after the browser is closed. This is useful for implementing a 'remember me' feature, as is done in the sample site included with the source code. Session data can be accessed via ```$q->env->{'psgix.session'}```. This returns a hash reference.
+Every request receives a 'Set-Cookie' header as part of the response, so the presence of a valid cookie is not enough to define a user as authenticated. The cookie only contains the session ID and any parameters such as 'secure' and the cookie expiration date. When a user authenticates, session data is set on the server and stored in the environment hash for the request. One of the session data fields is 'auth' and is set to a true value when a user authenticates. This session data persists in the cache and is expired according to you session_ttl in config. session_ttl also defines when the cookie expireson the client side, so these two expirations are in sync. If the session data field 'persist' is set to a true value upon authentication, the cookie will be sent without an expiration date and will therefore expire on the client side after the browser is closed. This is useful for implementing a 'remember me' feature, as is done in the sample site included with the source code. Session data can be accessed via ```$q->env->{'psgix.session'}```. This returns a hash reference.
 
-Requests to resources under your secure_dir are not responded to with a Set-Cookie header. Rather, incoming requests are checked for a cookie that would have been set at the authentication stage above, and the session ID from this cookie is used to look up session data in the cache. The data is checked for the 'auth' field.
-
-You can still restrict access to resources in your public routes file, but you will need to check session data for auth status on a per-route basis, via ```$q->is_auth()```. By populating routes in routes/auth.pl, this check is done for your automatically for any resources under secure_dir.
 
 ### Templates
 
