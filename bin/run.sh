@@ -37,13 +37,13 @@ my \$pub = Plack::App::File->new(root => '$APP_ROOT' . '/pub')->to_app; #config
 builder {
   mount '/' => builder {
     enable 'Session',
-      store => Quickroute::Session::cache('$CACHE_ROOT', $SESSION_TTL),
-      state => Quickroute::Session::cookie('$SECURE_COOKIE', $SESSION_TTL);
+      store => Quickroute::Session::cache('$CACHE_ROOT', $SESSION_TTL); # sessions inactive for specified TTL will be flushed from cache
+      state => Quickroute::Session::cookie('$SECURE_COOKIE'); 
     enable sub {
       my \$app = shift;
       sub {
         my \$env = shift;
-        Quickroute::Session::expire_cookie(\$env, '$CACHE_ROOT'); #expire cookie (from client) if persist field not set in session data
+        Quickroute::Session::perm_cookie(\$env, '$CACHE_ROOT'); # set a 'permanent' cookie (1yr) on the client if 'persist' field set in session data. Invalidated upon logout.
         my \$res = \$app->(\$env);
         return \$res;
       };
