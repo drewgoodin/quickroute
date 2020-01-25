@@ -10,5 +10,3 @@ app_root=
 sqlite_file=
 # Fully qualified path to directory for session cache.
 cache_root=
-# this (virtual) directory contains routes from 'routes/auth.pl' and requires a user to be logged in to access any resource. (along with any 'directory' you create under it in auth.pl)
-secure_path=/auth
