@@ -1,3 +1,8 @@
+noroute sub {
+  $q->status(404);
+  template('error')
+};
+
 route '/', get => sub {
   $q->is_auth ?
     template('welcome') :
@@ -18,7 +23,10 @@ route '/logout', get => sub {
   return '';
 };
 
-noroute sub {
-  $q->status(404);
-  template('error')
+route '/auth', get => sub {
+  unless ($q->is_auth) {
+    $q->status(403);
+    return template('forbid');
+  }
+  template('autharea')
 };
