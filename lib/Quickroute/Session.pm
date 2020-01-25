@@ -31,7 +31,6 @@ sub cookie {
 
 sub perm_cookie {
   my ($env, $root) = @_;
-  print $ttl, qq?\n?;
   my $id = $env->{HTTP_COOKIE};
   return 0 unless $id;
   $id =~ s/plack_session=(.*)/$1/;
