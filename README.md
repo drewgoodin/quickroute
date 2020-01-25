@@ -104,8 +104,11 @@ noroute sub {
 
 ### Sessions
 
-Every request receives a 'Set-Cookie' header as part of the response, so the presence of a valid cookie is not enough to define a user as authenticated. The cookie only contains the session ID and any parameters such as 'secure' and the cookie expiration date. When a user authenticates, session data is set on the server and stored in the environment hash for the request. One of the session data fields is 'auth' and is set to a true value when a user authenticates. This session data persists in the cache and is expired according to you session_ttl in config. session_ttl also defines when the cookie expireson the client side, so these two expirations are in sync. If the session data field 'persist' is set to a true value upon authentication, the cookie will be sent without an expiration date and will therefore expire on the client side after the browser is closed. This is useful for implementing a 'remember me' feature, as is done in the sample site included with the source code. Session data can be accessed via ```$q->env->{'psgix.session'}```. This returns a hash reference.
+Every request receives a 'Set-Cookie' header as part of the response, so the presence of a valid cookie is not enough to define a user as authenticated. The cookie only contains the session ID and any parameters such as 'secure' and the cookie expiration date. When a user authenticates, session data is set on the server and stored in the environment hash for the request. One of the session data fields is 'auth' and is set to a true value when a user authenticates. This session data persists in the cache and is expired according to your session_ttl in 'config'. 
 
+Unless the session data field 'persist' is set to a true value, the cookie will be sent without an expiration date and will therefore expire on the client side after the browser is closed. The Quickroute authentication method looks for a 'remember' field in post data, and will set this session data field to a true value if 'remember' is true. You don't have to make use of this, but it's there. 
+
+Session data for a request can be accessed via ```$q->env->{'psgix.session'}```. This returns a hash reference.
 
 ### Templates
 
